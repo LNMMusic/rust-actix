@@ -1,4 +1,4 @@
-use actix_web::{App, HttpServer, web};
+use actix_web::{App, HttpServer, };
 use api::routes;
 
 
@@ -6,9 +6,8 @@ use api::routes;
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .route("/", web::get().to(routes::manual_hello))
-            // apps
-            // .service(routes::hello)
+            .service(routes::scope_root())
+            .service(routes::scope_api())
     })
     .bind("127.0.0.1:8080")?
     .run()

@@ -1,22 +1,18 @@
-use actix_web::{HttpResponse, Responder};
-// use actix_web::{get, post};
+use actix_web::{web, Scope};
+// scopes - group routes
+pub mod root;
+pub mod api;
 
 
-// root [normal route without method - assigned in main.rs] -> route attr
-pub async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Root of API")
+pub fn scope_root() -> Scope {
+    let scope = web::scope("/")
+                    .route("", web::get().to(root::root));
+    scope
 }
 
-// others [normal route with method - ]                     -> service attr
-// #[get("/")]
-// async fn hello() -> impl Responder {
-//     HttpResponse::Ok().body("Hello world!")
-// }
-
-// #[post("/echo")]
-// async fn echo(req_body: String) -> impl Responder {
-//     HttpResponse::Ok().body(req_body)
-// }
-
-// routes
-pub mod users;
+pub fn scope_api() -> Scope {
+    let scope = web::scope("/api")
+                    .service(api::echo)
+                    .service(api::hello);
+    scope
+}
