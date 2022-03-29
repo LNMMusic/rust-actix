@@ -12,6 +12,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::scope_root())
             .service(routes::scope_api())
     })
+    .workers(4)
     .bind(("0.0.0.0", 8080))?
     .run()
     .await

@@ -15,7 +15,8 @@ pub fn scope_root() -> Scope {
 pub fn scope_api() -> Scope {
     let scope = web::scope("/api")
                     // services
-                    .service(api::echo)
-                    .service(api::hello);
+                    .service(api::api_get)
+                    .service(api::api_post)
+                    .service(api::api_post_param);
     scope
 }
