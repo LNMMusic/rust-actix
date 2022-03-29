@@ -1,6 +1,6 @@
 // LIBS
 use actix_web::{web, get, post, HttpResponse, Responder};
-use serde::{Serialize, Deserialize};      use serde_json;
+use serde::{Serialize, Deserialize};//      use serde_json;
 
 
 // READ
@@ -37,5 +37,6 @@ pub async fn api_post_param(param: web::Path<u32>, req: web::Json<UserRequest>) 
     println!("this is the request -> {} - {}", req.username, req.code);
 
     // response
-    HttpResponse::Ok().body(serde_json::to_string(&req).unwrap())
+    // HttpResponse::Ok().body(serde_json::to_string(&req).unwrap())
+    HttpResponse::Ok().json(req)
 }
