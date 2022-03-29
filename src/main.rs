@@ -1,11 +1,20 @@
 // LIBS
 use actix_web::{App, HttpServer};
 use api::routes;
+use dotenv::dotenv;
+use std::env;
 
 
 // APP Server
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    // Env
+    dotenv().ok();
+    if let Ok(var) = env::var("DBPSQL_URI") {
+        println!("var -> {}", var);
+    };
+
+    // Server
     HttpServer::new(|| {
         // Router
         App::new()
