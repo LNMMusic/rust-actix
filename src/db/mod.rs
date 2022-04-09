@@ -1,1 +1,2 @@
-pub mod psql;
+// handlers
+pub mod user;

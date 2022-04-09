@@ -1,0 +1,40 @@
+GET http://localhost:8080/
+
+###
+
+GET http://localhost:8080/api/
+
+###
+
+POST http://localhost:8080/api/request
+Content-Type: application/json
+
+{
+    "test":"works"
+}
+
+###
+
+POST http://localhost:8080/api/request/5
+Content-Type: application/json
+
+{
+    "username": "LNM",
+    "code": 1234
+}
+
+###
+
+GET http://localhost:8080/user/get
+
+###
+
+POST http://localhost:8080/user/create
+Content-Type: application/json
+
+{
+    "username": "LNM",
+    "password": "password",
+    "fullname": "Lucas Masiero",
+    "email":    "lnm@gmail.com"
+}

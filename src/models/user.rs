@@ -1,9 +1,10 @@
 use serde::{Serialize, Deserialize};
+use tokio_pg_mapper_derive::PostgresMapper;
 
 
-#[derive(Serialize, Deserialize, Default)]
+#[derive(Serialize, Deserialize, Default, PostgresMapper)]
+#[pg_mapper(table="users")]
 pub struct User {
-    pub id:         i32,
     pub username:   String,
     pub password:   String,
 
