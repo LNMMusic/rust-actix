@@ -26,6 +26,7 @@ pub struct User {
     pub email:      String,
 }
 
+#[derive(Serialize, Deserialize, Default)]
 pub struct UserRequest {
     pub username:   String,
     pub password:   String,

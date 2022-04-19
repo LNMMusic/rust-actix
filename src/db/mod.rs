@@ -1,9 +1,8 @@
-// SCHEMAS DB [Driver]
+// SCHEMA DB [Driver]
 pub mod schema;
 
-// Types
+// DB HANDLERS
 use diesel::{PgConnection, r2d2::{self, ConnectionManager}};
 pub type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
-// Handlers
 pub mod user;

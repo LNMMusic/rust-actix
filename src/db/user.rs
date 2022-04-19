@@ -1,11 +1,11 @@
 use actix_web::web;
-use diesel::{RunQueryDsl};
+use diesel::RunQueryDsl;
 
-use crate::{db::Pool, models::user::User};
-use crate::db::schema::users::dsl::*;
+use crate::db::{Pool, schema::users::dsl::users};
+use crate::models::user::User;
 
 
-// HANDLERS
+// READ
 pub fn get_all_users(pool: web::Data<Pool>) -> Result<Vec<User>, diesel::result::Error> {
     let conn= pool.get().unwrap();
 
@@ -13,6 +13,5 @@ pub fn get_all_users(pool: web::Data<Pool>) -> Result<Vec<User>, diesel::result:
     Ok(items)
 }
 
-pub fn get_user_by_id() -> () {
-
-}
+// WRITE
+// ...
