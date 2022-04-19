@@ -3,10 +3,17 @@ use crate::db::{Pool, user::get_all_users};
 
 
 // READ
-#[get("/")]
+#[get("/get/{user_id}")]
 pub async fn user_get(db: web::Data<Pool>, user_id: web::Path<i32>) -> Result<HttpResponse, Error> {
-    Ok(web::block(move || get_all_users(db))
+    // request
+    let id = user_id.into_inner();
+
+    // process
+    let users = web::block(move || get_all_users(db))
         .await
-        .map(|users| HttpResponse::Ok().json(users))
-        .map_err(|_| HttpResponse::InternalServerError())?)
+        .unwrap()
+        .unwrap();
+
+    // response
+    Ok(HttpResponse::Ok().json(users))
 }

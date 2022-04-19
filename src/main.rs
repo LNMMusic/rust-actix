@@ -1,7 +1,7 @@
 // Modules
 #[macro_use]
 extern crate diesel;
-mod config; mod models; mod db; mod routes;
+mod models; mod db; mod routes;
 
 // Libs
 use actix_web::{web, App, HttpServer};

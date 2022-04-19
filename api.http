@@ -25,7 +25,7 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8080/user/get
+GET http://localhost:8080/user/get/1
 
 ###
 
