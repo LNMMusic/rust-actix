@@ -1,32 +1,18 @@
-// LIBS
-use deadpool_postgres::Client;
-use tokio_pg_mapper::FromTokioPostgresRow;
+use actix_web::web;
+use diesel::{RunQueryDsl};
 
-use crate::models::user::User;
-use crate::config::error::MyError;
+use crate::{db::Pool, models::user::User};
+use crate::db::schema::users::dsl::*;
 
 
-pub async fn create_user(client: &Client, user_model: User) -> Result<User, MyError> {
-    // sql instruction
-    let _statement = include_str!("sql\\user_create.sql");
-    let _statement = _statement.replace("$table_fields", &User::sql_table_fields());
-    let statement = client.prepare(&_statement).await.unwrap();
+// HANDLERS
+pub fn get_all_users(pool: web::Data<Pool>) -> Result<Vec<User>, diesel::result::Error> {
+    let conn= pool.get().unwrap();
 
-    // process
-    client
-        .query(
-            &statement,
-            &[
-                &user_model.username,
-                &user_model.password,
-                &user_model.fullname,
-                &user_model.email,
-            ],
-        )
-        .await?
-        .iter()
-        .map(|row| User::from_row_ref(row).unwrap())
-        .collect::<Vec<User>>()
-        .pop()
-        .ok_or(MyError::NotFound)
+    let items = users.load::<User>(&conn)?;
+    Ok(items)
+}
+
+pub fn get_user_by_id() -> () {
+
 }

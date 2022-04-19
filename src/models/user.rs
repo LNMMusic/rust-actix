@@ -1,18 +1,40 @@
 use serde::{Serialize, Deserialize};
-use tokio_pg_mapper_derive::PostgresMapper;
+use crate::db::schema::*;
 
 
-#[derive(Serialize, Deserialize, Default, PostgresMapper)]
-#[pg_mapper(table="users")]
+// DB MODEL
+// model to connect to schema [allows diesel to manage transaction to db]
+#[derive(Debug, Insertable)]
+#[table_name="users"]
+pub struct UserDB<'a> {
+    pub username:   &'a str,
+    pub password:   &'a str,
+    pub fullname:   &'a str,
+    pub email:      &'a str,
+}
+
+
+// MODEL
+// model to use on services - routes
+#[derive(Serialize, Deserialize, Default, Queryable)]
 pub struct User {
+    pub id:         i32,
     pub username:   String,
     pub password:   String,
 
     pub fullname:   String,
     pub email:      String,
 }
-impl User {
+
+pub struct UserRequest {
+    pub username:   String,
+    pub password:   String,
+    pub fullname:   String,
+    pub email:      String,
+}
+impl UserRequest {
     pub fn hash_password(self: &mut Self) {
         self.password = format!("{}_hashed", self.password)
     }
 }
+

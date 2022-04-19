@@ -1,27 +1,30 @@
-use actix_web::{HttpResponse, ResponseError};
-use deadpool_postgres::PoolError;
-use derive_more::{Display, From};
-use tokio_pg_mapper::Error as PGMError;
-use tokio_postgres::error::Error as PGError;
+use actix_web::{error::ResponseError, HttpResponse};
+use derive_more::Display;
 
 
-#[derive(Display, From, Debug)]
-pub enum MyError {
-    NotFound,
-    PGError(PGError),
-    PGMError(PGMError),
-    PoolError(PoolError),
+#[derive(Debug, Display)]
+pub enum ServiceError {
+    #[display(fmt = "Internal Server Error")]
+    InternalServerError,
+
+    #[display(fmt = "BadRequest: {}", _0)]
+    BadRequest(String),
+
+    #[display(fmt = "JWKSFetchError")]
+    JWKSFetchError,
 }
-// traits
-impl std::error::Error for MyError {}
-impl ResponseError for MyError {
+
+// impl ResponseError trait allows to convert our errors into http responses with appropriate data
+impl ResponseError for ServiceError {
     fn error_response(&self) -> HttpResponse {
-        match *self {
-            MyError::NotFound => HttpResponse::NotFound().finish(),
-            MyError::PoolError(ref err) => {
-                HttpResponse::InternalServerError().body(err.to_string())
+        match self {
+            ServiceError::InternalServerError => {
+                HttpResponse::InternalServerError().json("Internal Server Error, Please try later")
             }
-            _ => HttpResponse::InternalServerError().finish(),
+            ServiceError::BadRequest(ref message) => HttpResponse::BadRequest().json(message),
+            ServiceError::JWKSFetchError => {
+                HttpResponse::InternalServerError().json("Could not fetch JWKS")
+            }
         }
     }
 }

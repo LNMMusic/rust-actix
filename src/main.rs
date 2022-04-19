@@ -1,19 +1,21 @@
 // LIBS
 use actix_web::{web, App, HttpServer};
-use dotenv::dotenv;
-use tokio_postgres::NoTls;
-use api::{routes, config};
+use crate::{db::Pool, routes};
 
 
 // APP Server
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     // Config
-    dotenv().ok();
+    dotenv::dotenv().ok();
 
     // DB
-    let config = config::ConfigApp::from_env().unwrap();
-    let pool = config.pg.create_pool(None, NoTls).unwrap();
+    let db_uri = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+
+    let client = ConnectionManager::<PgConnection>::new(db_uri);
+    let pool: Pool = r2d2::Pool::builder()
+                .build(client)
+                .expect("Failed to create pool.");
 
     // Server
     let server = HttpServer::new(move || {
