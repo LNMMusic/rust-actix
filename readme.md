@@ -31,14 +31,27 @@ FILES
 diesel = { version = "1.4.2", features = ["postgres","uuidv07","r2d2"]}
 ```
 
-- lib.rs:
+- main.rs:
 ```rust
 #[macro_use]
 extern crate diesel;
 
 pub mod models;
-pub mod schema;
+pub mod db {
+    pub mod schema
+}
 ```
+its in main.rs and not in lib.rs because the modules will act like bin instead of package
+
+- diesel.toml
+```toml
+[print_schema]
+file = "src/db/schema.rs"
+```
+the idea of a submodule schema in the module db is to separate the full driver of diesel and its cli, and rust itself.
+module db will handle all db handlers for transactions, that use the schema given by the diesel cli.
+module routes will call those handles and the module models act like a middle module between the routes to get data from the
+db handlers to those models used in the endpoints
 
 <br>
 
