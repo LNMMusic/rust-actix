@@ -1,6 +1,6 @@
 use actix_web::{web, Scope};
 // scopes - group routes
-pub mod root; pub mod api; pub mod user;
+mod root; mod api; mod user;
 
 
 // ROUTER
@@ -18,6 +18,10 @@ pub fn scope_router() -> Scope {
 
         // user
         .service(web::scope("/user")
+            // read
             .service(user::user_get)
+            .service(user::user_get_all)
+            // write
+            .service(user::user_create)
         )
 }
