@@ -1,6 +1,6 @@
 use actix_web::{web, Scope};
 // scopes - group routes
-mod root; mod api; mod user;
+mod root; mod api; mod user; mod auth;
 
 
 // ROUTER
@@ -23,5 +23,11 @@ pub fn scope_router() -> Scope {
             .service(user::user_get_all)
             // write
             .service(user::user_create)
+        )
+
+        //auth
+        .service(web::scope("/auth")
+            .service(auth::auth_sign_in)
+            .service(auth::auth_sign_out)
         )
 }
