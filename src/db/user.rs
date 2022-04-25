@@ -1,9 +1,9 @@
 use actix_web::web;
 // handlers to db
-use diesel::{RunQueryDsl, QueryDsl};    // extra features for table schema
+use diesel::{RunQueryDsl, QueryDsl, ExpressionMethods};    // extra features for table schema
 use diesel::dsl::{insert_into, update, delete};
 
-use crate::db::{Pool, schema::users::dsl::users};
+use crate::db::{Pool, schema::users::{dsl::users, username}};
 use crate::models::user::{UserDB, User};
 
 
@@ -19,6 +19,13 @@ pub fn get_user_by_id(pool: web::Data<Pool>, id: i32) -> Result<User, diesel::re
     let conn = pool.get().unwrap();
 
     let item = users.find(id).get_result::<User>(&conn);
+    item
+}
+
+pub fn get_user_by_username(pool: web::Data<Pool>, id_username: &String) -> Result<User, diesel::result::Error> {
+    let conn = pool.get().unwrap();
+
+    let item = users.filter(username.eq(id_username)).first::<User>(&conn);
     item
 }
 

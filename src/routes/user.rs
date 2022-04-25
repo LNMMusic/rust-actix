@@ -1,6 +1,6 @@
 use actix_web::{web, get, post, delete, HttpResponse};
 use crate::db::{Pool, user::{get_user_all, get_user_by_id, create_user, update_user, delete_user}};
-use crate::models::user::{UserRequest, UserDB};
+use crate::models::user::{UserRequest, UserDB, password};
 use crate::models::error::HttpErrors;
 
 
@@ -42,7 +42,8 @@ pub async fn user_get(db: web::Data<Pool>, user_id: web::Path<i32>) -> Result<Ht
 pub async fn user_create(db: web::Data<Pool>, user: web::Json<UserRequest>) -> Result<HttpResponse, HttpErrors> {
     // request
     let mut user = user.into_inner();
-    user.hash_password();
+    password::hash(&mut user.password);
+    // user.hash_password();
 
     // process
     let user = web::block(move || create_user(db, UserDB::generate(&user))).await.unwrap(); if user.is_err() {
@@ -60,7 +61,8 @@ pub async fn user_update(db: web::Data<Pool>, user_id: web::Path<i32>, user: web
     // request
     let id = user_id.into_inner();
     let mut user = user.into_inner();
-    user.hash_password();
+    password::hash(&mut user.password);
+    // user.hash_password();
 
     // process
     let user = web::block(move || update_user(db, UserDB::generate(&user), id)).await.unwrap(); if user.is_err() {

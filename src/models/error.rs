@@ -10,7 +10,7 @@ use derive_more::{Display, Error};
 // [LIKE A TRAIT]
 #[derive(Debug, Display, Error)]
 pub enum HttpErrors {
-    #[display(fmt = "Error: {}", Message.message)]
+    #[display(fmt = "Error: {}", message)]
     StandardError { message: String },
 }
 impl error::ResponseError for HttpErrors {

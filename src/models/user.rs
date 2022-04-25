@@ -36,7 +36,6 @@ pub struct User {
     pub id:         i32,
     pub username:   String,
     pub password:   String,
-
     pub fullname:   String,
     pub email:      String,
 }
@@ -48,10 +47,24 @@ pub struct UserRequest {
     pub fullname:   String,
     pub email:      String,
 }
-impl UserRequest {
-    // methods
-    pub fn hash_password(self: &mut Self) {
-        self.password = format!("{}_hashed", self.password)
-    }
+
+#[derive(Serialize, Deserialize, Default)]
+pub struct UserSignIn {
+    pub username:   String,
+    pub password:   String,
 }
 
+
+// handlers
+pub mod password {
+    pub fn hash(password: &mut String) {
+        *password = format!("{}_hashed", *password)
+    }
+    
+    pub fn validate(password: &String, hashed: &String) -> bool {
+        if format!("{}_hashed", *password) != *hashed {
+            return false
+        }
+        true
+    }
+}
