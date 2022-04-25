@@ -21,6 +21,7 @@ derive_more = "0.99.17"
 # auth
 jsonwebtoken = "8.1.0"
 futures-util = "0.3.21"
+actix-web-httpauth = "0.6.0"
 # jwt-simple = "0.10.10"
 # chrono = "0.4.19"
 # static

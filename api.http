@@ -7,6 +7,7 @@ GET http://localhost:8080/api/
 ###
 
 POST http://localhost:8080/api/request
+Authorization: Bearer test
 Content-Type: application/json
 
 {
@@ -37,4 +38,38 @@ Content-Type: application/json
     "password": "password",
     "fullname": "Lucas Masiero",
     "email":    "lnm@gmail.com"
+}
+
+###
+# FULL TEST
+POST http://localhost:8080/user/create
+Content-Type: application/json
+
+{
+    "username": "LNM2",
+    "password": "password",
+    "fullname": "Lucas Nicolas Masiero",
+    "email":    "lnm2@gmail.com"
+}
+
+###
+GET http://localhost:8080/user/get/2
+
+###
+
+POST http://localhost:8080/auth/sign-in
+Content-Type: application/json
+
+{
+    "username": "LNM2",
+    "password": "password"
+}
+
+###
+POST http://localhost:8080/api/request
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MywiYWRtaW4iOmZhbHNlLCJpYXQiOjE2NTA5MDU2MzQsImV4cCI6MTY1MDkwNjUzNH0.bybmaiMyJYmg3qVGFfx6WeWfBqA357WYhmZfac2BmNE
+Content-Type: application/json
+
+{
+    "test":"works"
 }

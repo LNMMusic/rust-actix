@@ -50,10 +50,11 @@ impl JWTEncoder {
 }
 pub struct JWTDecoder {
     key:    DecodingKey,
+    #[warn(dead_code)]
     valid:  Validation,
 }
 impl JWTDecoder {
-    pub fn verify_token(&self, token: String) -> Result<Claims, String> {
+    pub fn _verify_token(&self, token: String) -> Result<Claims, String> {
         let claims = decode::<Claims>(&token, &self.key, &self.valid); if claims.is_err() {
             return Err("Failed to get claims from jwt token!".to_owned())
         };
@@ -61,6 +62,15 @@ impl JWTDecoder {
             return Err("Invalid token. It has expired!".to_owned())
         };
         Ok(claims)
+    }
+    pub fn valid_token(&self, token: String) -> bool {
+        let claims = decode::<Claims>(&token, &self.key, &self.valid); if claims.is_err() {
+            return false
+        };
+        let claims = claims.unwrap().claims; if claims.is_expired() {
+            return false
+        };
+        true
     }
 }
 
@@ -147,5 +157,30 @@ pub mod middleware {
                 Ok(res)
             })
         }
+    }
+}
+
+pub mod middleware2 {
+    use actix_web_httpauth::extractors::{
+        bearer::{BearerAuth, Config},
+        AuthenticationError
+    };
+    use actix_web::{
+        dev::{ServiceRequest},
+        Error,
+    };
+    use super::JWTCONFIG;
+
+
+    pub async fn jwt_validation(req: ServiceRequest, credentials: BearerAuth) -> Result<ServiceRequest, Error> {
+        let config = req
+            .app_data::<Config>()
+            .map(|data| data.clone())
+            .unwrap_or_else(Default::default);
+
+        if JWTCONFIG.decoder.valid_token(credentials.token().to_owned()) {
+            return Ok(req)
+        };
+        Err(AuthenticationError::from(config).into())
     }
 }

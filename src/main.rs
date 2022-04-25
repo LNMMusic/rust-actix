@@ -9,7 +9,7 @@ mod models;
 mod handlers; mod db;
 
 // Libs
-use actix_web::{web, App, HttpServer};
+use actix_web::{web, middleware, App, HttpServer};
 use diesel::{prelude::*, r2d2::{self, ConnectionManager}};
 
 
@@ -31,6 +31,8 @@ async fn main() -> std::io::Result<()> {
     // SERVER
     HttpServer::new(move || {
         App::new()
+            // logger
+            .wrap(middleware::Logger::default())
             // db
             .app_data(web::Data::new(pool.clone()))
             // Router
