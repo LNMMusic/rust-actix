@@ -33,6 +33,7 @@ pub fn scope_router() -> Scope {
 
         //auth
         .service(web::scope("/auth")
+            .service(auth::auth_sign_up)
             .service(auth::auth_sign_in)
             .service(auth::auth_sign_out)
         )
